@@ -154,7 +154,7 @@ public class SecurityChecker extends MiniJavaBaseListener {
         if(t3==Level.HIGH && Level.glb(t1, t2)==Level.LOW){
             this.check(false, ctx, "Assignment of value of type " + Level.glb(t1, t2) + " to variable of incompatible type " + t3);
         }else{
-            this.types.push(Level.lub(t1, t2))
+            this.types.push(Level.lub(t1, t2));
         }
     }
 
@@ -376,8 +376,8 @@ public class SecurityChecker extends MiniJavaBaseListener {
 		//is that do nothing because enter/leave group are the same?
     }
 
-    //@Override
-    public void identifierLevel(MiniJavaParser.ExpLocalVarContext ctx) {
+    @Override
+    public void exitExpLocalVar(MiniJavaParser.ExpLocalVarContext ctx) {
         if (!this.secure) {
             return;
         }
