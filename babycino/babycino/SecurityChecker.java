@@ -110,6 +110,7 @@ public class SecurityChecker extends MiniJavaBaseListener {
 
     // Statements:
     @Override
+    @SuppressWarnings("unchecked")
     public void exitStmtBlock(MiniJavaParser.StmtBlockContext ctx) {
         if (!this.secure) {
             return;
@@ -140,7 +141,7 @@ public class SecurityChecker extends MiniJavaBaseListener {
                 n++;
             }
         }
-        
+
         //System.out.println("m = " + m);
         //System.out.println("n = " + n);
         if(n==0){
