@@ -130,18 +130,20 @@ public class SecurityChecker extends MiniJavaBaseListener {
             return;
         }
 
-                // Truth Table
-        // : t1    : t2    : t3    : compatible  :
-        // .......................................
-        // : HIGH  : HIGH  : HIGH  : TRUE        :
-        // : HIGH  : HIGH  : LOW   : TRUE        :
-        // : HIGH  : LOW   : LOW   : TRUE        :
-        // : HIGH  : LOW   : HIGH  : FALSE       :
-        // : LOW   : HIGH  : HIGH  : FALSE       :
-        // : LOW   : HIGH  : LOW   : TRUE        :
-        // : LOW   : LOW   : LOW   : TRUE        :
-        // : LOW   : LOW   : HIGH  : FALSE       :
-        // .......................................
+        // Truth Table
+        // ............................................................................
+        // : t1    : t2    : Statement need to be for whole IF  : t3    : compatible  :
+        // ............................................................................
+        // : HIGH  : HIGH  : HIGH                               : HIGH  : TRUE        :
+        // : HIGH  : HIGH  : HIGH                               : LOW   : TRUE        :
+        // : HIGH  : LOW   : LOW                                : LOW   : TRUE        :
+        // : HIGH  : LOW   : LOW                                : HIGH  : FALSE       :
+        // : LOW   : HIGH  : LOW                                : HIGH  : FALSE       :
+        // : LOW   : HIGH  : LOW                                : LOW   : TRUE        :
+        // : LOW   : LOW   : LOW                                : LOW   : TRUE        :
+        // : LOW   : LOW   : LOW                                : HIGH  : FALSE       :
+        // ............................................................................
+
 
         // TODO: Task 3.3
         //this.check(false, ctx, "Unimplemented");
@@ -152,9 +154,10 @@ public class SecurityChecker extends MiniJavaBaseListener {
 
         //  Incompatible is checked using check() and the highest value of t1 and t2 is pushed onto the stack in the compatible case.
         if(t3==Level.HIGH && Level.glb(t1, t2)==Level.LOW){
-            this.check(false, ctx, "Assignment of value of type " + Level.glb(t1, t2) + " to variable of incompatible type " + t3);
+            this.check(false, ctx, "Assignment of value of type Level." + Level.glb(t1, t2) + " to variable of incompatible type Level." + t3);
+            this.types.push(t3);
         }else{
-            this.types.push(Level.lub(t1, t2));
+            this.types.push(Level.glb(t1, t2));
         }
     }
 
@@ -189,7 +192,8 @@ public class SecurityChecker extends MiniJavaBaseListener {
 		if(tmp1){
             this.types.push(lhs);
         }else{
-            this.check(tmp1, ctx, "Assignment of value of type " + rhs + " to variable of incompatible type " + lhs);
+            this.check(tmp1, ctx, "Assignment of value of type Level." + rhs + " to variable of incompatible type Level." + lhs);
+            this.types.push(rhs);
         }
 
         
@@ -229,6 +233,8 @@ public class SecurityChecker extends MiniJavaBaseListener {
 			if the level is the same, tmp1 will be true
 			if the level is different, tmp1 will be false
 		*/
+        
+
 		boolean tmp1;
 		if(lhs != rhs	&&	lhs == Level.LOW){
 			tmp1 = false;
@@ -240,9 +246,11 @@ public class SecurityChecker extends MiniJavaBaseListener {
 		if(tmp1){
             this.types.push(rhs);
         }else{
-            this.check(tmp1, ctx, "Assignment of value of type " + rhs + " to variable of incompatible type " + lhs);
+            this.check(tmp1, ctx, "Assignment of value of type Level." + rhs + " to variable of incompatible type Level." + lhs);
+            this.types.push(lhs);
         }
 
+        
 
     }
 
