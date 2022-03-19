@@ -3,6 +3,7 @@ package babycino;
 import org.antlr.v4.runtime.ParserRuleContext;
 import java.util.Stack;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.Map;
 
@@ -114,10 +115,38 @@ public class SecurityChecker extends MiniJavaBaseListener {
             return;
         }
 
+        
         // TODO: Task 3.4
         //this.check(false, ctx, "Unimplemented");
+
+        //  Store the Level into the List.
+        List params =new ArrayList<>();
+        Level tmp;
+        // Calcute the number of Level.HIGH
+        int m=0;
+        // Calcute the number of Level.LOW
+        int n=0;
+
         for (MiniJavaParser.StatementContext s : ctx.statement()) {
-            this.types.pop();
+            tmp = this.types.pop();
+            params.add(tmp);
+            //System.out.println(tmp);
+        }
+
+        for(Object tmp1:params){
+            if(tmp1==Level.HIGH){
+                m++;
+            }else{
+                n++;
+            }
+        }
+        
+        //System.out.println("m = " + m);
+        //System.out.println("n = " + n);
+        if(n==0){
+            this.types.push(Level.HIGH);
+        }else{
+            this.types.push(Level.LOW);
         }
 
 
